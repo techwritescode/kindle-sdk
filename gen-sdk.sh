@@ -18,10 +18,8 @@ Setup_SDK() {
     sysroot_dir="$tc_dir/$tc_target/sysroot"
 
     # Just in case
-    set +e
-    sudo umount ./cache/${tc_target}/firmware*/mnt
-    set -e
-    
+    rm -rf ./cache/${tc_target}/firmware*/mnt
+
     case $sdk_target in
         kindlehf)
             arch="armhf"
@@ -106,7 +104,7 @@ Setup_SDK() {
 
           gunzip rootfs.img.gz
           mkdir -p mnt
-          sudo mount -o loop rootfs.img mnt
+          debugfs -R 'rdump / mnt' rootfs.img 2>/dev/null
       cd ../../..
     done
 
@@ -209,7 +207,7 @@ Setup_SDK() {
 
 
     echo "[*] Cleaning up"
-    sudo umount ./cache/${tc_target}/firmware*/mnt
+    rm -rf ./cache/${tc_target}/firmware*/mnt
 
     echo "===================================================================================================="
     echo "[*] Kindle (unofficial) SDK Installed"
@@ -225,8 +223,8 @@ echo "================ v2.0.0 ="
 echo
 echo
 
-echo "Please authenticate sudo for mounting"
-sudo echo # Do sudo auth beforehand in case the user leaves when we actually need it lol (the user's PC should download the firmware within the timeout window)
+#echo "Please authenticate sudo for mounting"
+#sudo echo # Do sudo auth beforehand in case the user leaves when we actually need it lol (the user's PC should download the firmware within the timeout window)
 cd $(dirname "$0")
 
 HELP_MSG="
